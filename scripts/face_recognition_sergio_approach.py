@@ -32,8 +32,6 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # segmenting the image
     segmentated_img = segmentor.removeBG(frame, ar_image, threshold=0.9)
     cv2.imshow("Camera Stream", segmentated_img)
-    while True:
-        a = 1
     image_ = cv2.add(segmentated_img,ar_image)
     
 
