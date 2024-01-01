@@ -1,5 +1,5 @@
-# Ignore virtual environment files
-/bin
-/lib
-/share
-pyvenv.cfg
+# Ignore Python virtual environment 
+.venv/
+
+#Py cache generated files
+*.pyc
