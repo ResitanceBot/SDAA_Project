@@ -61,6 +61,8 @@ with handsModule.Hands(static_image_mode=False, min_detection_confidence=0.7, mi
                 # no es robusto a zoom, pero no se me ocurre referencia con la que normalizarlo
                 # a pesar de ello, para un rango de funcionamiento normal, no debe haber problema
                 # con estos umbrales ya que hay margen de diferencia entre los 2 tipos de clasificación
+                
+                # solución: normalizar con distancia entre 5 y 17
                 print('dst', 480*abs(index_tip.y-index_mcp.y))
                 print('dst', 480*abs(middle_tip.y-middle_mcp.y))
                 print('dst', 480*abs(ring_tip.y-ring_mcp.y))
@@ -74,9 +76,11 @@ with handsModule.Hands(static_image_mode=False, min_detection_confidence=0.7, mi
                     print('Mano cerrada detectada')
                 else:
                     print('Mano abierta detectada')
+                    #if 4~=10: (mejorar de hacer falta con 12-9,   16-13 y 20-17 ~=0)
+                    #   click en posición de 8
 
         # segmenting the image
-        ar_image = segmentor.removeBG(image, bg_image, threshold=0.4)
+        ar_image = segmentor.removeBG(image, bg_image, threshold=0.2)
         cv2.imshow("Camera Stream", ar_image)
 
         # trace fps
