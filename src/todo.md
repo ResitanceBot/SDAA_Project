@@ -1,7 +1,9 @@
-1) Alojar funcionalidades de background removal y detección de mano abierta/cerrada al script main.py.
-2) Normalizar con distancia en horizontal entre 5 y 17 los umbrales de detección
-3) Interfaz gesto: 4 pegado a 9-10-11... significaría un click. El puntero sería el punto 8.
-4) Gesto adicional: cambiar fondo de pantalla cuando se cierra la mano
+1) Alojar funcionalidades de background removal y detección de mano abierta/cerrada al script main.py. (DONE)
+2) Normalizar con distancia en horizontal entre 5 y 17 los umbrales de detección (DONE)
+* Para el punto 2 se ha considerado finalmente una métrica distinta ya que no era lo suficientemente robusta
+3) Interfaz gesto: 4 pegado a 9-10-11... significaría un click. El puntero sería el punto 8.(DONE)
+* Experimentalmente cuadra mejor con 5
+4) Gesto adicional: cambiar fondo de pantalla cuando se cierra la mano (DONE)
 5) Definir cuadricula donde cada zona de píxeles son botones (utilizar marcos exteriores) y preparar 2 interfaces diferentes (botonera y barras de nivel de %, i.e valores analógicos)
 5) Ajustar métricas para que no choquen entre sí (cuidado con mano abierta, valor por defecto)
 5) UDP server en RPI que envíe comando y UDP client en windows que traduzca a comando de carla

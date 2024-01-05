@@ -1,5 +1,15 @@
 IMAGE_WIDTH = 640
 IMAGE_HEIGHT = 480
-BACKGROUND_IMAGE_RELATIVE_PATH_LIST = ['resources', 'hmi_interface.png'] # relative to root project folder
-LOOP_FREQ = 15
+BACKGROUND_IMAGE_RELATIVE_PATH_LIST = [['resources', 'hmi_interface.png'], ['resources', 'relax.jpg']] # relative to root project folder
+MAX_INTERFACES = 2
+LOOP_FREQ = 10
 BG_FILTER_SENSITIVITY = 0.2 # 0 to 1
+MEDIAPIPE_HANDS_SENSITIVITY = 0.2 # 0 to 1
+NORMDIST_0_5_TARGET = 0.43
+NORMDIST_0_17_TARGET = 0.37
+NORMDIST_5_17_TARGET = 0.19
+ADMITTED_PALM_VARIATION = 0.25 # Max error considered valid to identify hand (% per 1)
+SAFE_DIVISION_MIN = 0.01
+CLICK_TRIGGERING = 0.12
+CLOSE_HAND_TRIGGER = 0.5
+COOLDOWN_CLOSE_HAND_TIME = 10 #number of frames
