@@ -9,12 +9,14 @@ import os
 import time
 import numpy as np
 import matplotlib.pyplot as plt
+import mediapipe
 
 # Functions importation from external modules
 from threading import Semaphore
 from threading import Thread
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+from cvzone.SelfiSegmentationModule import SelfiSegmentation
 
 # Own modules importation
 from constants import *
@@ -23,6 +25,7 @@ from constants import *
 
 # Semaphores
 current_frame_semaphore = Semaphore(1)
+filtered_image_semaphore = Semaphore(1)
 
 def load_image(relative_path_list):
     root_project_path = os.path.normpath(
@@ -34,8 +37,8 @@ def load_image(relative_path_list):
     background_image = cv2.imread(image_path)
     if background_image is not None:
         if (
-            background_image.shape[0] == IMAGE_HEIGHT
-            and background_image.shape[1] == IMAGE_WIDTH
+            background_image.shape[0] != IMAGE_HEIGHT
+            and background_image.shape[1] != IMAGE_WIDTH
         ): # resize to desired shape if needed
             background_image.resize(IMAGE_HEIGHT, IMAGE_WIDTH)
         print('Image loaded succesfully')
@@ -81,9 +84,6 @@ def read_new_frame_picamera():
         prev_time = time.time()
         current_frame_semaphore.acquire()
         current_frame = frame.array
-        cv2.imshow("Camera Stream", current_frame)
-        cv2.waitKey(1) # in this case is not inteded to poll for a key pressed, but it is mandatory to create
-        #an event to trigger window redrawing
         current_frame_semaphore.release()
         current_time = time.time()
         if((current_time - prev_time) < 1/LOOP_FREQ):
@@ -94,14 +94,14 @@ def read_new_frame_picamera():
         print('hilo read:', 1/(current_time_t-prev_time_t))
             
 def show_current_frame():
-    global current_frame_semaphore
+    global filtered_image_semaphore
     global current_frame
     while True:
         prev_time_t = time.time()
         prev_time = time.time()
-        current_frame_semaphore.acquire()
-        cv2.imshow("Camera Stream", current_frame)
-        current_frame_semaphore.release()
+        filtered_image_semaphore.acquire()
+        cv2.imshow("Camera Stream", filtered_image)
+        filtered_image_semaphore.release()
         cv2.waitKey(1) # in this case is not inteded to poll for a key pressed, but it is mandatory to create
         #an event to trigger window redrawing
         current_time = time.time()
@@ -109,7 +109,38 @@ def show_current_frame():
             time.sleep(1/LOOP_FREQ - current_time + prev_time)
         current_time_t = time.time()
         print('hilo show:', 1/(current_time_t-prev_time_t))
-        
 
 def background_filter():
-    a = 1
+    global current_frame_semaphore
+    global filtered_image_semaphore
+    global current_frame
+    global filtered_image
+    segmentor = SelfiSegmentation()
+    bg_image = load_image(BACKGROUND_IMAGE_RELATIVE_PATH_LIST)
+    while True:
+        prev_time_t = time.time()
+        prev_time = time.time()
+        current_frame_semaphore.acquire()
+        filtered_image_semaphore.acquire()
+        filtered_image = segmentor.removeBG(current_frame, bg_image, threshold=BG_FILTER_SENSITIVITY)
+        filtered_image_semaphore.release()
+        current_frame_semaphore.release()
+        current_time = time.time()
+        if((current_time - prev_time) < 1/LOOP_FREQ):
+            time.sleep(1/LOOP_FREQ - current_time + prev_time)
+        current_time_t = time.time()
+        print('hilo read:', 1/(current_time_t-prev_time_t))
+        
+def gesture_recognition():
+    drawingModule = mediapipe.solutions.drawing_utils
+    handsModule = mediapipe.solutions.hands
+    
+    with handsModule.Hands(static_image_mode=False, min_detection_confidence=0.7, min_tracking_confidence=0.7, max_num_hands=2) as hands:
+        
+        results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+        
+        if results.multi_hand_landmarks != None:
+            for handLandmarks in results.multi_hand_landmarks:
+                drawingModule.draw_landmarks(image, handLandmarks, handsModule.HAND_CONNECTIONS)
+        
+        

@@ -1,6 +1,3 @@
-# Tras pruebas en el main.py, tanto en opencv como en picamera (y en frecuencias forzadas y no forzadas), en ambos los fps se cumplen a la tasa solicitada
-# Aunque la latencia en opencv no es horrible, con la picamera se consigue un mejor resultado, casi nulo en retraso
-
 1) Alojar funcionalidades de background removal y detección de mano abierta/cerrada al script main.py.
 2) Normalizar con distancia en horizontal entre 5 y 17 los umbrales de detección
 3) Interfaz gesto: 4 pegado a 9-10-11... significaría un click. El puntero sería el punto 8.
