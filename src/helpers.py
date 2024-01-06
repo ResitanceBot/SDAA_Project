@@ -11,6 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import mediapipe
 import math
+import socket
 
 # Functions importation from external modules
 from threading import Semaphore
@@ -30,7 +31,6 @@ hands = mediapipe.solutions.hands.Hands(static_image_mode=False, \
     min_tracking_confidence=MEDIAPIPE_HANDS_SENSITIVITY, \
     max_num_hands=1)
 segmentor = SelfiSegmentation()
-
 
 class ThreadWithReturnValue(Thread):
     
@@ -127,3 +127,24 @@ def gesture_recognition(multiHandLandmarks):
         return pointer, gesture
         
         
+def command_interpreter(x,y):
+    command = None
+    distance_min = float('inf')
+    # Picture frame checking
+    if ((x<FRAME_LEFT_LIMIT_X or x>FRAME_RIGHT_LIMIT_X) or y<FRAME_UPPER_LIMIT_Y):
+        for button, (button_x, button_y) in BUTTON_COORDINATES.items():
+            dist = distance_calc(button_x, button_y, x, y)
+            if dist < distance_min:
+                distance_min = dist
+                command = button
+    return command
+
+def distance_calc(x1, y1, x2, y2):
+    return ((x2 - x1)**2 + (y2 - y1)**2)
+
+def send_command_UDP(UDP_PAYLOAD):
+    print("Sending UDP command:", UDP_PAYLOAD)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.sendto(bytes(UDP_PAYLOAD, "utf-8"), (UDP_RECEIVER_IP, UDP_PORT))    
+    sock.close()
+    

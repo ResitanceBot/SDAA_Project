@@ -66,6 +66,8 @@ if __name__ == "__main__":
             
             if gesture_type is "CLICK_GESTURE":
                     cv2.circle(filtered_image, (int(pointer.x*IMAGE_WIDTH), int(pointer.y*IMAGE_HEIGHT)), 20, (0,255,0), thickness=10)
+                    command = command_interpreter(int(pointer.x*IMAGE_WIDTH), int(pointer.y*IMAGE_HEIGHT))
+                    send_command_UDP(command)
             elif gesture_type is "CLOSE_HAND_GESTURE":
                 if (bg_index < MAX_INTERFACES-1):
                     bg_index = bg_index + 1
