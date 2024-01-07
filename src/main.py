@@ -38,6 +38,7 @@ if __name__ == "__main__":
         prev_time_t = time.time()
         prev_time = time.time()
         current_frame = frame.array
+        current_frame = cv2.flip(current_frame,1)
         background_filter_thread = ThreadWithReturnValue(target=background_filter, args=[current_frame, bg_image])
         gesture_recognition_thread = ThreadWithReturnValue(target=gesture_recognition, args=[current_frame])
         background_filter_thread.start()
