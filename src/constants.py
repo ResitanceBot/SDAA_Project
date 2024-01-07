@@ -12,4 +12,3 @@ ADMITTED_PALM_VARIATION = 0.25 # Max error considered valid to identify hand (% 
 SAFE_DIVISION_MIN = 0.01
 CLICK_TRIGGERING = 0.12
 CLOSE_HAND_TRIGGER = 0.5
-COOLDOWN_CLOSE_HAND_TIME = 10 #number of frames

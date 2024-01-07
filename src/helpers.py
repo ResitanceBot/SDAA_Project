@@ -10,6 +10,7 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 import mediapipe
+import math
 
 # Functions importation from external modules
 from threading import Semaphore
@@ -74,9 +75,55 @@ def background_filter(current_frame, bg_image):
     filtered_image = segmentor.removeBG(current_frame, bg_image, threshold=BG_FILTER_SENSITIVITY)
     return filtered_image
         
-def gesture_recognition(current_frame):
+def hand_landmarks_detection(current_frame):
     results = hands.process(cv2.cvtColor(current_frame, cv2.COLOR_BGR2RGB))
-    return results
+    return results.multi_hand_landmarks
 
+def gesture_recognition(multiHandLandmarks):
+    # Initialize gesture to 
+    gesture = "NON_GESTURE"
+    
+    for handLandmarks in multiHandLandmarks:
+        point_0 = handLandmarks.landmark[mediapipe.solutions.hands.HandLandmark.WRIST]
+        point_4 = handLandmarks.landmark[mediapipe.solutions.hands.HandLandmark.THUMB_TIP]
+        point_5 = handLandmarks.landmark[mediapipe.solutions.hands.HandLandmark.INDEX_FINGER_MCP]
+        point_8 = handLandmarks.landmark[mediapipe.solutions.hands.HandLandmark.INDEX_FINGER_TIP]
+        point_12 = handLandmarks.landmark[mediapipe.solutions.hands.HandLandmark.MIDDLE_FINGER_TIP]
+        point_16 = handLandmarks.landmark[mediapipe.solutions.hands.HandLandmark.RING_FINGER_TIP]
+        point_17 = handLandmarks.landmark[mediapipe.solutions.hands.HandLandmark.PINKY_MCP]
+        point_20 = handLandmarks.landmark[mediapipe.solutions.hands.HandLandmark.PINKY_TIP]
+        
+        # defining pointer as point 8
+        pointer = point_8
+        
+        # calculating distance between points
+        distance_points_0_5 = math.sqrt(pow(point_0.x-point_5.x,2)+pow(point_0.y-point_5.y,2))
+        distance_points_0_8 = math.sqrt(pow(point_0.x-point_8.x,2)+pow(point_0.y-point_8.y,2))
+        distance_points_0_12 = math.sqrt(pow(point_0.x-point_12.x,2)+pow(point_0.y-point_12.y,2))
+        distance_points_0_16 = math.sqrt(pow(point_0.x-point_16.x,2)+pow(point_0.y-point_16.y,2))
+        distance_points_0_17 = math.sqrt(pow(point_0.x-point_17.x,2)+pow(point_0.y-point_17.y,2))
+        distance_points_0_20 = math.sqrt(pow(point_0.x-point_20.x,2)+pow(point_0.y-point_20.y,2))
+        distance_points_4_5 = math.sqrt(pow(point_4.x-point_5.x,2)+pow(point_4.y-point_5.y,2))
+        distance_points_5_17 = math.sqrt(pow(point_5.x-point_17.x,2)+pow(point_5.y-point_17.y,2))
+        
+        # calculate invariant metric
+        palm_perimeter =( distance_points_5_17+distance_points_0_17+distance_points_0_5)
+        
+        # filter to apply restrictions on click detection
+        valid_orientation = ( (abs(distance_points_5_17/palm_perimeter-NORMDIST_5_17_TARGET)/NORMDIST_5_17_TARGET < ADMITTED_PALM_VARIATION) and \
+            (abs(distance_points_0_17/palm_perimeter-NORMDIST_0_17_TARGET)/NORMDIST_0_17_TARGET < ADMITTED_PALM_VARIATION) and \
+            (abs(distance_points_0_5/palm_perimeter-NORMDIST_0_5_TARGET)/NORMDIST_0_5_TARGET < ADMITTED_PALM_VARIATION))
+        
+        if (valid_orientation):
+            if(distance_points_4_5/palm_perimeter < CLICK_TRIGGERING):   
+                gesture = "CLICK_GESTURE"
+
+        if((distance_points_0_8/palm_perimeter < CLOSE_HAND_TRIGGER) and \
+            (distance_points_0_12/palm_perimeter < CLOSE_HAND_TRIGGER) and \
+            (distance_points_0_16/palm_perimeter < CLOSE_HAND_TRIGGER) and \
+            (distance_points_0_20/palm_perimeter < CLOSE_HAND_TRIGGER)):
+            gesture = "CLOSE_HAND_GESTURE"
+            
+        return pointer, gesture
         
         
