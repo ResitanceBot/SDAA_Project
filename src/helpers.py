@@ -130,17 +130,17 @@ def gesture_recognition(multiHandLandmarks):
 def command_interpreter(x,y):
     command = None
     distance_min = float('inf')
-    # Picture frame checking
-    if ((x<FRAME_LEFT_LIMIT_X or x>FRAME_RIGHT_LIMIT_X) or y<FRAME_UPPER_LIMIT_Y):
-        for button, (button_x, button_y) in BUTTON_COORDINATES.items():
-            dist = distance_calc(button_x, button_y, x, y)
-            if dist < distance_min:
-                distance_min = dist
-                command = button
-    return command
 
-def distance_calc(x1, y1, x2, y2):
-    return ((x2 - x1)**2 + (y2 - y1)**2)
+    # Speed bar area
+    if ((x > SPEEDBAR_LEFT_LIMIT_X and x < SPEEDBAR_RIGHT_LIMIT_X) and (y > SPEEDBAR_UPPER_LIMIT_Y and y < SPEEDBAR_LOWER_LIMIT_Y)):
+        command = 'S' + str(int(((y-SPEEDBAR_UPPER_LIMIT_Y) / (SPEEDBAR_LOWER_LIMIT_Y-SPEEDBAR_UPPER_LIMIT_Y))*100))
+    # Button association
+    else: 
+        for button, (button_x, button_y) in BUTTON_COORDINATES.items():
+            if ((x > button_x-BUTTON_TOLERANCE and x < button_x+BUTTON_TOLERANCE) and (y > button_y-BUTTON_TOLERANCE and y < button_y+BUTTON_TOLERANCE)):
+                command = button
+                        
+    return command
 
 def send_command_UDP(UDP_PAYLOAD):
     print("Sending UDP command:", UDP_PAYLOAD)
