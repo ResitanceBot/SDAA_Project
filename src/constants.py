@@ -1,6 +1,6 @@
 IMAGE_WIDTH = 640
 IMAGE_HEIGHT = 480
-BACKGROUND_IMAGE_RELATIVE_PATH_LIST = [['resources', 'hmi_interface.png'], ['resources', 'relax.jpg']] # relative to root project folder
+BACKGROUND_IMAGE_RELATIVE_PATH_LIST = [['resources', 'panel-controller.png'], ['resources', 'relax.jpg']] # relative to root project folder
 MAX_INTERFACES = 2
 LOOP_FREQ = 10
 BG_FILTER_SENSITIVITY = 0.2 # 0 to 1
