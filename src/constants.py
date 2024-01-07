@@ -26,5 +26,5 @@ SPEEDBAR_LEFT_LIMIT_X = 45
 SPEEDBAR_UPPER_LIMIT_Y = 70
 SPEEDBAR_LOWER_LIMIT_Y = 385
 # UDP connection
-UDP_RECEIVER_IP = '192.168.100.34' # Host IP who receives UDP msgs
-UDP_PORT = 1234 # Port number 
+UDP_RECEIVER_IP = '192.168.1.133' # Host IP who receives UDP msgs
+UDP_PORT = 1234 # Port number

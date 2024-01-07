@@ -71,15 +71,18 @@ if __name__ == "__main__":
                     if command is 'LIGHT':
                         if (light_state is False):
                             command = 'LIGHT_ON'
+                            light_state = True
                         else:
                             command = 'LIGHT_OFF'
-                    send_command_UDP(command)
+                            light_state = False
+                    if command is not None:
+                        send_command_UDP(command)
             elif gesture_type is "CLOSE_HAND_GESTURE":
                 if (bg_index < MAX_INTERFACES-1):
                     bg_index = bg_index + 1
                 else:
                     bg_index = 0
-                bg_image = load_image(BACKGROUND_IMAGE_RELATIVE_PATH_LIST[bg_index])
+                #bg_image = load_image(BACKGROUND_IMAGE_RELATIVE_PATH_LIST[bg_index])
             else:
                 cv2.circle(filtered_image, (int(pointer.x*IMAGE_WIDTH), int(pointer.y*IMAGE_HEIGHT)), 20, (0,0,255), thickness=10)
         

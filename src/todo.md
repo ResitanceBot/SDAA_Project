@@ -14,3 +14,7 @@ Reparto:
 -Sergio: integrar en hilos (comodín de ayuda si el tema de hilos se empieza a complicar), añadir ideas de gestos
 
 Ambos: Traducir posiciones y clicks en comandos. Actuar en Carla
+
+1) Enclavamiento light on/off + background change (idea: pantalla bloqueo)
+2) Conectar a Carla Server
+3) Mejorar métrica invariente y/o filtro de perspectiva de la mano a la cámara + ajuste de umbrales a nueva idea

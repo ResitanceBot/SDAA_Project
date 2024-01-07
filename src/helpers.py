@@ -110,9 +110,12 @@ def gesture_recognition(multiHandLandmarks):
         palm_perimeter =( distance_points_5_17+distance_points_0_17+distance_points_0_5)
         
         # filter to apply restrictions on click detection
-        valid_orientation = ( (abs(distance_points_5_17/palm_perimeter-NORMDIST_5_17_TARGET)/NORMDIST_5_17_TARGET < ADMITTED_PALM_VARIATION) and \
-            (abs(distance_points_0_17/palm_perimeter-NORMDIST_0_17_TARGET)/NORMDIST_0_17_TARGET < ADMITTED_PALM_VARIATION) and \
-            (abs(distance_points_0_5/palm_perimeter-NORMDIST_0_5_TARGET)/NORMDIST_0_5_TARGET < ADMITTED_PALM_VARIATION))
+        #valid_orientation = ( (abs(distance_points_5_17/palm_perimeter-NORMDIST_5_17_TARGET)/NORMDIST_5_17_TARGET < ADMITTED_PALM_VARIATION) and \
+        #    (abs(distance_points_0_17/palm_perimeter-NORMDIST_0_17_TARGET)/NORMDIST_0_17_TARGET < ADMITTED_PALM_VARIATION) and \
+        #    (abs(distance_points_0_5/palm_perimeter-NORMDIST_0_5_TARGET)/NORMDIST_0_5_TARGET < ADMITTED_PALM_VARIATION) and \
+        #    (distance_points_0_8/palm_perimeter < CLOSE_HAND_TRIGGER) and (distance_points_0_12/palm_perimeter < CLOSE_HAND_TRIGGER) \
+        #    (distance_points_0_16/palm_perimeter < CLOSE_HAND_TRIGGER) and (distance_points_0_20/palm_perimeter < CLOSE_HAND_TRIGGER))
+        valid_orientation = True
         
         if (valid_orientation):
             if(distance_points_4_5/palm_perimeter < CLICK_TRIGGERING):   
@@ -129,7 +132,6 @@ def gesture_recognition(multiHandLandmarks):
         
 def command_interpreter(x,y):
     command = None
-    distance_min = float('inf')
 
     # Speed bar area
     if ((x > SPEEDBAR_LEFT_LIMIT_X and x < SPEEDBAR_RIGHT_LIMIT_X) and (y > SPEEDBAR_UPPER_LIMIT_Y and y < SPEEDBAR_LOWER_LIMIT_Y)):
