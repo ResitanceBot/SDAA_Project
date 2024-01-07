@@ -145,6 +145,5 @@ def distance_calc(x1, y1, x2, y2):
 def send_command_UDP(UDP_PAYLOAD):
     print("Sending UDP command:", UDP_PAYLOAD)
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.sendto(bytes(UDP_PAYLOAD, "utf-8"), (UDP_RECEIVER_IP, UDP_PORT))    
+    sock.sendto(bytes(UDP_PAYLOAD, "utf-8"), (UDP_RECEIVER_IP, UDP_PORT))
     sock.close()
-    
