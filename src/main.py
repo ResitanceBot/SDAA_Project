@@ -35,6 +35,7 @@ if __name__ == "__main__":
     # General variables initialization
     bg_index = 0
     light_state = False
+    light_button_pressed = False
     
     # wait some seconds for camera to be operative
     time.sleep(1)
@@ -69,15 +70,20 @@ if __name__ == "__main__":
                     cv2.circle(filtered_image, (int(pointer.x*IMAGE_WIDTH), int(pointer.y*IMAGE_HEIGHT)), 20, (0,255,0), thickness=10)
                     command = command_interpreter(int(pointer.x*IMAGE_WIDTH), int(pointer.y*IMAGE_HEIGHT))
                     if command is 'LIGHT':
-                        if (light_state is False):
-                            command = 'LIGHT_ON'
-                            light_state = True
-                        else:
-                            command = 'LIGHT_OFF'
-                            light_state = False
-                    if command is not None:
+                        if not light_button_pressed:
+                            light_button_pressed = True
+                            if (light_state is False):
+                                command = 'LIGHT_ON'
+                                light_state = True
+                            else:
+                                command = 'LIGHT_OFF'
+                                light_state = False
+                    else:
+                        light_button_pressed = False
+                    if command is not None and command is not 'LIGHT':
                         send_command_UDP(command)
             elif gesture_type is "CLOSE_HAND_GESTURE":
+                light_button_pressed = False
                 if (bg_index < MAX_INTERFACES-1):
                     bg_index = bg_index + 1
                 else:
@@ -85,6 +91,8 @@ if __name__ == "__main__":
                 #bg_image = load_image(BACKGROUND_IMAGE_RELATIVE_PATH_LIST[bg_index])
             else:
                 cv2.circle(filtered_image, (int(pointer.x*IMAGE_WIDTH), int(pointer.y*IMAGE_HEIGHT)), 20, (0,0,255), thickness=10)
+                light_button_pressed = False
+                
         
         cv2.imshow("Camera Stream", filtered_image)
         cv2.waitKey(1) # in this case is not inteded to poll for a key pressed, but it is mandatory to create
