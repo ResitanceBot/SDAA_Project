@@ -12,7 +12,7 @@ import cv2
 #Initialize 'currentname' to trigger only when a new person is identified.
 currentname = "unknown"
 #Determine faces from encodings.pickle file model created from train_model.py
-encodingsP = "encodings.pickle"
+encodingsP = "/home/pi/SDAA_Project/src/face_recognition/encodings.pickle"
 
 # load the known faces and embeddings along with OpenCV's Haar
 # cascade for face detection
@@ -50,7 +50,7 @@ for frame in cam.capture_continuous(rawCapture, format="bgr", use_video_port=Tru
 		# attempt to match each face in the input image to our known
 		# encodings
 		matches = face_recognition.compare_faces(data["encodings"],
-			encoding)
+			encoding, 0.35)
 		name = "Unknown" #if face is not recognized, then print Unknown
 
 		# check to see if we have found a match

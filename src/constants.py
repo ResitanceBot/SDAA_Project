@@ -1,7 +1,6 @@
 IMAGE_WIDTH = 640
 IMAGE_HEIGHT = 480
-BACKGROUND_IMAGE_RELATIVE_PATH_LIST = [['resources', 'panel-controller.png'], ['resources', 'relax.jpg']] # relative to root project folder
-MAX_INTERFACES = 2
+BACKGROUND_IMAGE_RELATIVE_PATH_LIST = [['resources', 'panel-controller.png'], ['resources', 'lock_screen.png']] # relative to root project folder
 LOOP_FREQ = 10
 BG_FILTER_SENSITIVITY = 0.2 # 0 to 1
 MEDIAPIPE_HANDS_SENSITIVITY = 0.2 # 0 to 1
@@ -29,3 +28,4 @@ SPEEDBAR_LOWER_LIMIT_Y = 385
 UDP_RECEIVER_IP = '192.168.241.162' # Host IP who receives UDP msgs
 #UDP_RECEIVER_IP = '192.168.1.133' # Host IP who receives UDP msgs
 UDP_PORT = 1234 # Port number
+COOLDOWN_LOCK_SCREEN = 10.0
