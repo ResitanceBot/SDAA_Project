@@ -14,7 +14,6 @@ import math
 import socket
 
 # Functions importation from external modules
-from threading import Semaphore
 from threading import Thread
 from picamera.array import PiRGBArray
 from picamera import PiCamera

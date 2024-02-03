@@ -4,8 +4,6 @@
 #-------------------------------------------
 
 # External modules importation
-import cv2
-import mediapipe
 import threading
 
 # Functions importation from external modules

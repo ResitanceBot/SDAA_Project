@@ -3,6 +3,7 @@ from picamera import PiCamera
 from cvzone.SelfiSegmentationModule import SelfiSegmentation
 import cv2
 import time
+import face_recognition
 
 camera = PiCamera()
 camera.resolution = (320, 240)

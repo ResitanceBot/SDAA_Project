@@ -22,3 +22,6 @@ Ambos: Traducir posiciones y clicks en comandos. Actuar en Carla
 ----
 1) Pantalla de bloqueo con reconocimiento facial
 2) Script Windows lanzador para elegir mundo, weather, dia/noche, trafico, control remoto RPI
+----
+RETOQUES FINALES
+1) Quitar las librerias que no se usan o estén repetidas en main / helpers (comprobando que no peta el sistema)
