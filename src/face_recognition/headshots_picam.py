@@ -5,9 +5,10 @@ from picamera.array import PiRGBArray
 name = 'Sergio' #replace with your name
 
 cam = PiCamera()
-cam.resolution = (512, 304)
+cam.resolution = (640, 480)
 cam.framerate = 10
-rawCapture = PiRGBArray(cam, size=(512, 304))
+cam.rotation = 180
+rawCapture = PiRGBArray(cam, size=(640, 480))
     
 img_counter = 0
 
@@ -23,7 +24,7 @@ while True:
             break
         elif k%256 == 32:
             # SPACE pressed
-            img_name = "dataset/"+ name +"/image_{}.jpg".format(img_counter)
+            img_name = "/home/pi/SDAA_Project/src/face_recognition/dataset/"+ name +"/image_{}.jpg".format(img_counter)
             cv2.imwrite(img_name, image)
             print("{} written!".format(img_name))
             img_counter += 1

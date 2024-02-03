@@ -1,8 +1,8 @@
 #! /usr/bin/python
 
 # import the necessary packages
-from imutils.video import VideoStream
-from imutils.video import FPS
+from picamera import PiCamera
+from picamera.array import PiRGBArray
 import face_recognition
 import imutils
 import pickle
@@ -24,19 +24,21 @@ data = pickle.loads(open(encodingsP, "rb").read())
 # src = 0 : for the build in single web cam, could be your laptop webcam
 # src = 2 : I had to set it to 2 inorder to use the USB webcam attached to my laptop
 #vs = VideoStream(src=2,framerate=10).start()
-vs = VideoStream(usePiCamera=True).start()
+cam = PiCamera()
+cam.resolution = (640, 480)
+cam.framerate = 10
+cam.rotation = 180
+rawCapture = PiRGBArray(cam, size=(640, 480))
 time.sleep(2.0)
 
-# start the FPS counter
-fps = FPS().start()
 
 # loop over frames from the video file stream
-while True:
+for frame in cam.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 	# grab the frame from the threaded video stream and resize it
 	# to 500px (to speedup processing)
-	frame = vs.read()
+	frame = frame.array
+	rawCapture.truncate(0)
 	frame = imutils.resize(frame, width=500)
-	frame = imutils.rotate(frame,180)
 	# Detect the fce boxes
 	boxes = face_recognition.face_locations(frame)
 	# compute the facial embeddings for each face bounding box
@@ -96,13 +98,7 @@ while True:
 		break
 
 	# update the FPS counter
-	fps.update()
 
-# stop the timer and display FPS information
-fps.stop()
-print("[INFO] elasped time: {:.2f}".format(fps.elapsed()))
-print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
 
 # do a bit of cleanup
 cv2.destroyAllWindows()
-vs.stop()
