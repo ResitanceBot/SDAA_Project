@@ -101,7 +101,7 @@ if __name__ == "__main__":
             background_filter_thread.start()
             filtered_image = background_filter_thread.join()
             #[boxes, names] = face_recognition_thread.join()
-            boxes, names = face_recogn(current_frame)
+            boxes, names = face_processing(current_frame)
             
             timeInterval = time.time() - lockTime
             

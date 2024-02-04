@@ -50,7 +50,7 @@ for frame in cam.capture_continuous(rawCapture, format="bgr", use_video_port=Tru
 		# attempt to match each face in the input image to our known
 		# encodings
 		matches = face_recognition.compare_faces(data["encodings"],
-			encoding, 0.35)
+			encoding, 0.5)
 		name = "Unknown" #if face is not recognized, then print Unknown
 
 		# check to see if we have found a match

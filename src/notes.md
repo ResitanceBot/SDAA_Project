@@ -31,3 +31,10 @@
 
 
 
+# Face detection: Bounding box 
+Haar cascades: Baja precisión y poco robusto, muy ligero computacionalmente
+HOG+Linear: Carga computacional media, precisión buena, poca robustez
+CNN: Alta carga computacional (requiere de GPU), alta precisión y alta robustez
+Seleccionado HOG dada la aplicación en tiempo real
+# Face recognition: Person validation
+A más imágenes añadidas en el dataset, peor resultados se han conseguido, penalizando los frames conseguidos por segundo al aumentar el número de comparaciones a realizar por cada cara.

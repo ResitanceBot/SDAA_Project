@@ -10,7 +10,7 @@ import os
 
 # our images are located in the dataset folder
 print("[INFO] start processing faces...")
-imagePaths = list(paths.list_images("dataset"))
+imagePaths = list(paths.list_images("/home/pi/SDAA_Project/src/face_recognition/dataset/Sergio"))
 
 # initialize the list of known encodings and known names
 knownEncodings = []

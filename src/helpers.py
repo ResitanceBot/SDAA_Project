@@ -130,7 +130,7 @@ def gesture_recognition(multiHandLandmarks):
             
         return pointer, gesture
     
-def face_recogn(frame):
+def face_processing(frame):
     # Load model
     data = pickle.loads(open("/home/pi/SDAA_Project/src/face_recognition/encodings.pickle", "rb").read())
     
@@ -145,7 +145,7 @@ def face_recogn(frame):
     for encoding in encodings:
 	    # attempt to match each face in the input image to our known
 	    # encodings
-        matches = face_recognition.compare_faces(data["encodings"],	encoding, 0.35)
+        matches = face_recognition.compare_faces(data["encodings"],	encoding, 0.5)
         name = "Unknown" #if face is not recognized, then print Unknown
 
         # check to see if we have found a match
