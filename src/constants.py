@@ -1,7 +1,6 @@
 IMAGE_WIDTH = 640
 IMAGE_HEIGHT = 480
-BACKGROUND_IMAGE_RELATIVE_PATH_LIST = [['resources', 'panel-controller.png'], ['resources', 'relax.jpg']] # relative to root project folder
-MAX_INTERFACES = 2
+BACKGROUND_IMAGE_RELATIVE_PATH_LIST = [['resources', 'panel-controller.png'], ['resources', 'lock_screen.png']] # relative to root project folder
 LOOP_FREQ = 10
 BG_FILTER_SENSITIVITY = 0.2 # 0 to 1
 MEDIAPIPE_HANDS_SENSITIVITY = 0.2 # 0 to 1
@@ -12,3 +11,21 @@ ADMITTED_PALM_VARIATION = 0.25 # Max error considered valid to identify hand (% 
 SAFE_DIVISION_MIN = 0.01
 CLICK_TRIGGERING = 0.12
 CLOSE_HAND_TRIGGER = 0.5
+BUTTON_COORDINATES = {
+    'FORW': (505, 170),
+    'BACK': (505, 350),
+    'RIGHT': (590, 250),
+    'LEFT': (420, 250),
+    'LIGHT': (420, 80)
+}
+BUTTON_TOLERANCE = 40
+# Button asociation, Frame Limits
+SPEEDBAR_RIGHT_LIMIT_X = 120
+SPEEDBAR_LEFT_LIMIT_X = 45
+SPEEDBAR_UPPER_LIMIT_Y = 70
+SPEEDBAR_LOWER_LIMIT_Y = 385
+# UDP connection
+UDP_RECEIVER_IP = '192.168.241.162' # Host IP who receives UDP msgs
+#UDP_RECEIVER_IP = '192.168.1.133' # Host IP who receives UDP msgs
+UDP_PORT = 1234 # Port number
+COOLDOWN_LOCK_SCREEN = 10.0

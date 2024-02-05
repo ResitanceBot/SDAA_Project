@@ -11,9 +11,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import mediapipe
 import math
+import socket
+import pickle
+import face_recognition
 
 # Functions importation from external modules
-from threading import Semaphore
 from threading import Thread
 from picamera.array import PiRGBArray
 from picamera import PiCamera
@@ -30,7 +32,6 @@ hands = mediapipe.solutions.hands.Hands(static_image_mode=False, \
     min_tracking_confidence=MEDIAPIPE_HANDS_SENSITIVITY, \
     max_num_hands=1)
 segmentor = SelfiSegmentation()
-
 
 class ThreadWithReturnValue(Thread):
     
@@ -110,9 +111,12 @@ def gesture_recognition(multiHandLandmarks):
         palm_perimeter =( distance_points_5_17+distance_points_0_17+distance_points_0_5)
         
         # filter to apply restrictions on click detection
-        valid_orientation = ( (abs(distance_points_5_17/palm_perimeter-NORMDIST_5_17_TARGET)/NORMDIST_5_17_TARGET < ADMITTED_PALM_VARIATION) and \
-            (abs(distance_points_0_17/palm_perimeter-NORMDIST_0_17_TARGET)/NORMDIST_0_17_TARGET < ADMITTED_PALM_VARIATION) and \
-            (abs(distance_points_0_5/palm_perimeter-NORMDIST_0_5_TARGET)/NORMDIST_0_5_TARGET < ADMITTED_PALM_VARIATION))
+        #valid_orientation = ( (abs(distance_points_5_17/palm_perimeter-NORMDIST_5_17_TARGET)/NORMDIST_5_17_TARGET < ADMITTED_PALM_VARIATION) and \
+        #    (abs(distance_points_0_17/palm_perimeter-NORMDIST_0_17_TARGET)/NORMDIST_0_17_TARGET < ADMITTED_PALM_VARIATION) and \
+        #    (abs(distance_points_0_5/palm_perimeter-NORMDIST_0_5_TARGET)/NORMDIST_0_5_TARGET < ADMITTED_PALM_VARIATION) and \
+        #    (distance_points_0_8/palm_perimeter < CLOSE_HAND_TRIGGER) and (distance_points_0_12/palm_perimeter < CLOSE_HAND_TRIGGER) \
+        #    (distance_points_0_16/palm_perimeter < CLOSE_HAND_TRIGGER) and (distance_points_0_20/palm_perimeter < CLOSE_HAND_TRIGGER))
+        valid_orientation = True
         
         if (valid_orientation):
             if(distance_points_4_5/palm_perimeter < CLICK_TRIGGERING):   
@@ -125,5 +129,65 @@ def gesture_recognition(multiHandLandmarks):
             gesture = "CLOSE_HAND_GESTURE"
             
         return pointer, gesture
+    
+def face_processing(frame):
+    # Load model
+    data = pickle.loads(open("/home/pi/SDAA_Project/src/face_recognition/encodings.pickle", "rb").read())
+    
+    
+    # Detect the fce boxes
+    boxes = face_recognition.face_locations(frame)
+	# compute the facial embeddings for each face bounding box
+    encodings = face_recognition.face_encodings(frame, boxes)
+    names = []
+
+	# loop over the facial embeddings
+    for encoding in encodings:
+	    # attempt to match each face in the input image to our known
+	    # encodings
+        matches = face_recognition.compare_faces(data["encodings"],	encoding, 0.5)
+        name = "Unknown" #if face is not recognized, then print Unknown
+
+        # check to see if we have found a match
+        if True in matches:
+			# find the indexes of all matched faces then initialize a
+			# dictionary to count the total number of times each face
+			# was matched
+            matchedIdxs = [i for (i, b) in enumerate(matches) if b]
+            counts = {}
+
+			# loop over the matched indexes and maintain a count for
+			# each recognized face face
+            for i in matchedIdxs:
+                name = data["names"][i]
+                counts[name] = counts.get(name, 0) + 1
+
+			# determine the recognized face with the largest number
+			# of votes (note: in the event of an unlikely tie Python
+			# will select first entry in the dictionary)
+            name = max(counts, key=counts.get)
+
+		# update the list of names
+        names.append(name)
         
-        
+    return boxes, names
+    
+def command_interpreter(x,y):
+    command = None
+
+    # Speed bar area
+    if ((x > SPEEDBAR_LEFT_LIMIT_X and x < SPEEDBAR_RIGHT_LIMIT_X) and (y > SPEEDBAR_UPPER_LIMIT_Y and y < SPEEDBAR_LOWER_LIMIT_Y)):
+        command = 'S' + str(int(((y-SPEEDBAR_UPPER_LIMIT_Y) / (SPEEDBAR_LOWER_LIMIT_Y-SPEEDBAR_UPPER_LIMIT_Y))*100))
+    # Button association
+    else: 
+        for button, (button_x, button_y) in BUTTON_COORDINATES.items():
+            if ((x > button_x-BUTTON_TOLERANCE and x < button_x+BUTTON_TOLERANCE) and (y > button_y-BUTTON_TOLERANCE and y < button_y+BUTTON_TOLERANCE)):
+                command = button
+                        
+    return command
+
+def send_command_UDP(UDP_PAYLOAD):
+    print("Sending UDP command:", UDP_PAYLOAD)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.sendto(bytes(UDP_PAYLOAD, "utf-8"), (UDP_RECEIVER_IP, UDP_PORT))
+    sock.close()
