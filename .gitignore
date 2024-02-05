@@ -3,3 +3,6 @@
 
 #Py cache generated files
 *.pyc
+
+# Ignore VSCode ws
+.vscode 
